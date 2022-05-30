@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "515690828931",
+    "project_id": "cnumovie-f27ec",
+    "storage_bucket": "cnumovie-f27ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515690828931:android:886dba07c8b0c4b57377b6",
+        "android_client_info": {
+          "package_name": "cnu.junghun.movie_cnu_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "515690828931-77714ntdmgnl607t0oamtmo4963ff2t3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cnu.junghun.movie_cnu_mobile",
+            "certificate_hash": "ac50f6f1e2d26ea3813854c854390ef8b516a0aa"
+          }
+        },
+        {
+          "client_id": "515690828931-8s80s6fnm5b0to4hv4cvuldj6dr84nu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6jLBAc9t80ks8grDNuFFcxKiRkOH5mG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "515690828931-8s80s6fnm5b0to4hv4cvuldj6dr84nu5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "515690828931-e0h3m6nso2nua5nnhd1ucokj82v2tvg4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cnu.junghun.movieCnuMobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
