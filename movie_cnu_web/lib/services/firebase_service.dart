@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import '../models/movie.dart';
 
 class FirebaseService {
   FirebaseService._initialize() {
@@ -28,14 +26,23 @@ class FirebaseService {
     return movieList.docs;
   }
   //TODO 이미지업로드 고민할것
-  Future<String?> getImageUrl(String movieId, XFile file) async {
+  Future<bool> uploadImage(String movieId, Uint8List file) async {
     try {
-      File image = File(file.path);
       String destination = 'movies/$movieId';
       final ref = _firebaseStorage.ref(destination);
-      TaskSnapshot uploadedFile = await ref.putFile(image);
-      String? downloadUrl = await uploadedFile.ref.getDownloadURL();
-      return downloadUrl;
+      await ref.putData(file);
+      return true;
+    } catch (e) {
+      print('errorMsg : $e');
+      return false;
+    }
+  }
+
+  Future<Uint8List?> getImage(String movieId, Uint8List file) async {
+    try {
+      String destination = 'movies/$movieId';
+      final ref = _firebaseStorage.ref(destination);
+      return ref.getData();
     } catch (e) {
       print('errorMsg : $e');
       return null;

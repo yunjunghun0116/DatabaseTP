@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:movie_cnu_web/models/movie.dart';
 import 'package:movie_cnu_web/widgets/select_grade_bottom_sheet.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../constants.dart';
@@ -18,12 +21,10 @@ class UploadMovieScreen extends StatefulWidget {
 
 class _UploadMovieScreenState extends State<UploadMovieScreen> {
   final formKey = GlobalKey<FormState>();
-  final picker = ImagePicker();
 
   String title = '';
   DateTime openDate = DateTime.now();
-  String imageUrl =
-      'https://image.mfa.go.th/mfa/r_0x740/bE5KohkHoq/migrate_directory/news-20190103-152039.jpg';
+  Uint8List? fileBytes;
   String director = '';
   List actors = [];
   int length = 0;
@@ -31,6 +32,25 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
 
   void uploadPressed() {
     if (formKey.currentState!.validate()) {}
+  }
+
+  void uploadImage()async{
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if(result != null){
+        Uint8List? fileBytesImage = result.files.first.bytes;
+        String movieId = '1234';
+        if(fileBytesImage==null) return;
+        bool uploadSuccess = await MovieController.to.uploadImage(movieId, fileBytesImage);
+        if(uploadSuccess){
+          setState(() {
+            fileBytes = fileBytesImage;
+          });
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -69,10 +89,10 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
                   SizedBox(
                     width: 150,
                     height: 200,
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                    ),
+                    child: fileBytes==null ?Image.network(
+                      noImageUrl,
+                      fit: BoxFit.fill,
+                    ):Image.memory(fileBytes!,fit: BoxFit.cover),
                   ),
                   const SizedBox(
                     width: 20,
@@ -87,30 +107,9 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        width: 200,
-                        child: Text(
-                          imageUrl,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+                      const SizedBox(height: 20),
                       InkWell(
-                        onTap: () async {
-                          try {
-                            XFile? image = await picker.pickImage(source: ImageSource.gallery);
-                            if(kIsWeb && image!=null){
-                              String? downloadUrl = await MovieController.to.getImageUrl('test', image);
-                              if(downloadUrl != null){
-                                setState(() {
-                                  imageUrl = downloadUrl;
-                                });
-                              }
-                            }
-                          } catch (e) {
-                            print(e);
-                          }
-                        },
+                        onTap: () =>uploadImage(),
                         child: Container(
                           alignment: Alignment.center,
                           width: 200,

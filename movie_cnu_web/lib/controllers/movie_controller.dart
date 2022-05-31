@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:movie_cnu_web/models/movie.dart';
@@ -14,12 +16,12 @@ class MovieController extends GetxController {
     }).toList();
   }
 
-  Future<String?> getImageUrl(String movieId,XFile file) async {
+  Future<bool> uploadImage(String movieId,Uint8List file) async {
     try {
-      return await FirebaseService().getImageUrl(movieId,file);
+      return await FirebaseService().uploadImage(movieId,file);
     } catch (e) {
       print(e);
-      return null;
+      return false;
     }
   }
 }

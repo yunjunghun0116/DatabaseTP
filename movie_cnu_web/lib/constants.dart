@@ -16,4 +16,12 @@ const Color kPurpleColor = Color(0xFFBA55D3);
 const Color kMainColor = Color(0xFF07BBBB);
 const Color kSplashBackgroundColor = Color(0xFFFAFAFA);
 
-final List kGradeList = ['전체관람가','만12세이상 관람가','만15세이상 관람가','만18세이상 관람가','청소년관람불가'];
+final List kGradeList = [
+  '전체관람가',
+  '만12세이상 관람가',
+  '만15세이상 관람가',
+  '만18세이상 관람가',
+  '청소년관람불가'
+];
+const noImageUrl =
+    'https://image.mfa.go.th/mfa/r_0x740/bE5KohkHoq/migrate_directory/news-20190103-152039.jpg';
