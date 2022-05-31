@@ -2,6 +2,7 @@ class Movie {
   final String id;
   final String title;
   final DateTime openDate;
+  final String imageUrl;
   final String director;
   final List actors;
   final int length;
@@ -11,6 +12,7 @@ class Movie {
     required this.id,
     required this.title,
     required this.openDate,
+    required this.imageUrl,
     required this.director,
     required this.actors,
     required this.length,
@@ -21,6 +23,7 @@ class Movie {
         id: json['id'],
         title: json['title'],
         openDate: DateTime.parse(json['openDate']),
+        imageUrl: json['imageUrl'],
         director: json['director'],
         actors: json['actors'],
         length: json['length'],

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:movie_cnu_web/constants.dart';
+import 'package:movie_cnu_web/controllers/movie_controller.dart';
+import 'package:movie_cnu_web/screens/upload_movie_screen.dart';
 import 'package:movie_cnu_web/services/firebase_service.dart';
-import 'package:movie_cnu_web/widgets/upload_movie_dialog.dart';
 
 class MovieScreen extends StatelessWidget {
   const MovieScreen({Key? key}) : super(key: key);
@@ -10,7 +12,7 @@ class MovieScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: FirebaseService().getRunningMovie(),
+        future: MovieController.to.getRunningMovieList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -20,13 +22,10 @@ class MovieScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const UploadMovieDialog();
-                          },
-                        );
+                      onTap: ()  {
+                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                          return const UploadMovieScreen();
+                        }));
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
