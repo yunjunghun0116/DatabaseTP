@@ -43,7 +43,7 @@ class FirebaseService {
     try {
       String destination = 'movies/$movieId';
       final ref = _firebaseStorage.ref(destination);
-      return ref.getData();
+      return await ref.getData(1000000);
     } catch (e) {
       print('errorMsg : $e');
       return null;

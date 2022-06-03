@@ -29,7 +29,7 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
   String grade = '전체관람가';
 
   void uploadPressed() async{
-    if (formKey.currentState!.validate() && fileBytes != null) {
+    if (formKey.currentState!.validate() ) {
       formKey.currentState!.save();
       Map<String, dynamic> movieData = {
         'id': movieId,
@@ -95,56 +95,57 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
                 return null;
               },
             ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    height: 200,
-                    child: fileBytes == null
-                        ? Image.network(
-                            noImageUrl,
-                            fit: BoxFit.fill,
-                          )
-                        : Image.memory(
-                            fileBytes!,
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '이미지',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      InkWell(
-                        onTap: () => uploadImage(movieId),
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 200,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: kGreyColor),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: const Text('이미지 등록하기'),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+            //이미지 관련
+            // Padding(
+            //   padding: const EdgeInsets.all(16),
+            //   child: Row(
+            //     crossAxisAlignment: CrossAxisAlignment.end,
+            //     children: [
+            //       SizedBox(
+            //         width: 150,
+            //         height: 200,
+            //         child: fileBytes == null
+            //             ? Image.network(
+            //                 noImageUrl,
+            //                 fit: BoxFit.fill,
+            //               )
+            //             : Image.memory(
+            //                 fileBytes!,
+            //                 fit: BoxFit.cover,
+            //               ),
+            //       ),
+            //       const SizedBox(
+            //         width: 20,
+            //       ),
+            //       Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           const Text(
+            //             '이미지',
+            //             style: TextStyle(
+            //               fontSize: 16,
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //           ),
+            //           const SizedBox(height: 20),
+            //           InkWell(
+            //             onTap: () => uploadImage(movieId),
+            //             child: Container(
+            //               alignment: Alignment.center,
+            //               width: 200,
+            //               padding: const EdgeInsets.all(16),
+            //               decoration: BoxDecoration(
+            //                 border: Border.all(color: kGreyColor),
+            //                 borderRadius: BorderRadius.circular(5),
+            //               ),
+            //               child: const Text('이미지 등록하기'),
+            //             ),
+            //           ),
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // ),
             CustomTextFormField(
               label: '영화감독',
               onSaved: (value) {
@@ -200,7 +201,7 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
             CustomTextFormField(
               label: '영화길이',
               onSaved: (value) {
-                length = value;
+                length =int.parse(value);
               },
               inputType: TextInputType.number,
               validator: (value) {

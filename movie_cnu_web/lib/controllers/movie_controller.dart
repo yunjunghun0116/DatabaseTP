@@ -27,7 +27,7 @@ class MovieController extends GetxController {
     try {
       return await FirebaseService().getImage(movieId);
     } catch (e) {
-      print(e);
+      print('error is $e');
       return null;
     }
   }
