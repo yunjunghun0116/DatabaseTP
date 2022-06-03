@@ -18,14 +18,15 @@ class FirebaseService {
   Future<List> getRunningMovie() async {
     DateTime nowTime = DateTime.now();
     DateTime subtractedTime = nowTime.subtract(const Duration(days: 10));
+    print('nowTime : $nowTime\nsubtractedTime : $subtractedTime');
     QuerySnapshot movieList = await _firebaseFirestore
         .collection('movie')
-        .where('openDate', isGreaterThanOrEqualTo: subtractedTime)
-        .where('openDate', isLessThan: nowTime)
+        .where('openDate', isGreaterThanOrEqualTo: subtractedTime.toString())
+        .where('openDate', isLessThan: nowTime.toString())
         .get();
     return movieList.docs;
   }
-  //TODO 이미지업로드 고민할것
+
   Future<bool> uploadImage(String movieId, Uint8List file) async {
     try {
       String destination = 'movies/$movieId';
@@ -38,7 +39,7 @@ class FirebaseService {
     }
   }
 
-  Future<Uint8List?> getImage(String movieId, Uint8List file) async {
+  Future<Uint8List?> getImage(String movieId) async {
     try {
       String destination = 'movies/$movieId';
       final ref = _firebaseStorage.ref(destination);
@@ -46,6 +47,15 @@ class FirebaseService {
     } catch (e) {
       print('errorMsg : $e');
       return null;
+    }
+  }
+
+  Future<bool> uploadMovie(String id, Map<String, dynamic> movie) async {
+    try {
+      await _firebaseFirestore.collection('movie').doc(id).set(movie);
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

@@ -1,13 +1,10 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:movie_cnu_web/models/movie.dart';
+import 'package:get/get.dart';
 import 'package:movie_cnu_web/widgets/select_grade_bottom_sheet.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:uuid/uuid.dart';
 import '../constants.dart';
 import '../controllers/movie_controller.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -22,6 +19,7 @@ class UploadMovieScreen extends StatefulWidget {
 class _UploadMovieScreenState extends State<UploadMovieScreen> {
   final formKey = GlobalKey<FormState>();
 
+  String movieId = const Uuid().v4();
   String title = '';
   DateTime openDate = DateTime.now();
   Uint8List? fileBytes;
@@ -30,19 +28,35 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
   int length = 0;
   String grade = '전체관람가';
 
-  void uploadPressed() {
-    if (formKey.currentState!.validate()) {}
+  void uploadPressed() async{
+    if (formKey.currentState!.validate() && fileBytes != null) {
+      formKey.currentState!.save();
+      Map<String, dynamic> movieData = {
+        'id': movieId,
+        'title': title,
+        'openDate': openDate.toString(),
+        'director': director,
+        'actors': actors,
+        'length': length,
+        'grade': grade,
+      };
+      bool uploadSuccess = await MovieController.to.uploadMovie(movieId, movieData);
+      if(uploadSuccess){
+        print('upload Movie Success about ${movieData.toString()}');
+        Get.back();
+      }
+    }
   }
 
-  void uploadImage()async{
+  void uploadImage(String movieId) async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
-      if(result != null){
+      if (result != null) {
         Uint8List? fileBytesImage = result.files.first.bytes;
-        String movieId = '1234';
-        if(fileBytesImage==null) return;
-        bool uploadSuccess = await MovieController.to.uploadImage(movieId, fileBytesImage);
-        if(uploadSuccess){
+        if (fileBytesImage == null) return;
+        bool uploadSuccess =
+            await MovieController.to.uploadImage(movieId, fileBytesImage);
+        if (uploadSuccess) {
           setState(() {
             fileBytes = fileBytesImage;
           });
@@ -89,10 +103,15 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
                   SizedBox(
                     width: 150,
                     height: 200,
-                    child: fileBytes==null ?Image.network(
-                      noImageUrl,
-                      fit: BoxFit.fill,
-                    ):Image.memory(fileBytes!,fit: BoxFit.cover),
+                    child: fileBytes == null
+                        ? Image.network(
+                            noImageUrl,
+                            fit: BoxFit.fill,
+                          )
+                        : Image.memory(
+                            fileBytes!,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   const SizedBox(
                     width: 20,
@@ -109,7 +128,7 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
                       ),
                       const SizedBox(height: 20),
                       InkWell(
-                        onTap: () =>uploadImage(),
+                        onTap: () => uploadImage(movieId),
                         child: Container(
                           alignment: Alignment.center,
                           width: 200,

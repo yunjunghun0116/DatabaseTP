@@ -24,6 +24,8 @@ dependencies:
   file_picker: ^4.6.0
   #날짜선택 라이브러리
   flutter_datetime_picker: ^1.5.1
+  #id생성 라이브러리
+  uuid: ^3.0.6
 
 
 dev_dependencies:

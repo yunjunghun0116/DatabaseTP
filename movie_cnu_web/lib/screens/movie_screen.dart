@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:movie_cnu_web/constants.dart';
 import 'package:movie_cnu_web/controllers/movie_controller.dart';
 import 'package:movie_cnu_web/screens/upload_movie_screen.dart';
-import 'package:movie_cnu_web/services/firebase_service.dart';
+
+import '../models/movie.dart';
 
 class MovieScreen extends StatelessWidget {
   const MovieScreen({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class MovieScreen extends StatelessWidget {
         future: MovieController.to.getRunningMovieList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            List<Movie> movieList = snapshot.data as List<Movie>;
             return Column(
               children: [
                 const SizedBox(height: 10),
