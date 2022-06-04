@@ -12,4 +12,13 @@ class FirebaseService {
 
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
+  Future<bool> registerUser(String id, Map<String, dynamic> userInfo) async {
+    try {
+      await _firebaseFirestore.collection('movie').doc(id).set(userInfo);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
 }
