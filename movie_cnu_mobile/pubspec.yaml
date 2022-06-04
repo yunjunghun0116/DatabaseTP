@@ -21,6 +21,10 @@ dependencies:
   firebase_storage: ^10.2.17
   #이미지선택 라이브러리
   image_picker: ^0.8.5+3
+  #날짜선택 라이브러리
+  flutter_datetime_picker: ^1.5.1
+  #고유ID 라이브러리
+  uuid: ^3.0.6
 
 
 dev_dependencies:
