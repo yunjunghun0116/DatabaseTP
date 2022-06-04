@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movie_cnu_web/constants.dart';
 import 'package:movie_cnu_web/models/movie.dart';
+import 'package:movie_cnu_web/screens/add_schedule_screen.dart';
+import 'package:movie_cnu_web/widgets/schedule_result.dart';
 import '../widgets/tab_button.dart';
 
 class MovieDetailScreen extends StatefulWidget {
@@ -31,7 +33,17 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
         elevation: 1,
         title: Text(widget.movie.title),
         actions: [
-          TextButton(onPressed: () {}, child: Text('상영일정추가')),
+          TextButton(
+              onPressed: () async {
+                bool? result = await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                  return AddScheduleScreen(movie: widget.movie);
+                }));
+                if (result != null && result) {
+                  setState(() {});
+                }
+              },
+              child: const Text('상영일정추가')),
         ],
       ),
       body: Padding(
@@ -56,24 +68,19 @@ class _MovieDetailScreenState extends State<MovieDetailScreen>
               controller: _tabController,
               unselectedLabelColor: kGreyColor,
               labelColor: kBlackColor,
-              tabs: [
-                TabButton(text: '상영관1'),
-                TabButton(text: '상영관2'),
-                TabButton(text: '상영관3'),
-                TabButton(text: '상영관4'),
-                TabButton(text: '상영관5'),
-              ],
+              tabs: kTheaterList.map((e) {
+                return TabButton(text: e['name']);
+              }).toList(),
             ),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: [
-                  Container(),
-                  Container(),
-                  Container(),
-                  Container(),
-                  Container(),
-                ],
+                children: kTheaterList.map((e) {
+                  return ScheduleResult(
+                    movieId: widget.movie.id,
+                    theaterName: e['name'],
+                  );
+                }).toList(),
               ),
             ),
           ],

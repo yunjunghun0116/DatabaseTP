@@ -20,20 +20,11 @@ class MovieCard extends StatelessWidget {
           border: Border.all(color: kGreyColor),
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             Text('제목 : ${movie.title}'),
             Text('개봉일자 : ${movie.openDate.toString().substring(0, 10)}'),
             Text('감독 : ${movie.director}'),
-            Wrap(
-              children: [
-                const Text('출연배우 : '),
-                ...movie.actors.map((e) {
-                  return Text('$e ');
-                }).toList()
-              ],
-            ),
             Text('영화길이 : ${movie.length}분'),
             Text('등급 : ${movie.grade}'),
           ],

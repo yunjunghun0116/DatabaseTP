@@ -23,7 +23,7 @@ class SelectGradeBottomSheet extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context,_grade);
                 },
-                child: Text('설정완료',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                child: const Text('설정완료',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
               ),
             ],
           ),

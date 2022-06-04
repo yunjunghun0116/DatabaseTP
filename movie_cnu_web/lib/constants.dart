@@ -23,5 +23,28 @@ final List kGradeList = [
   '만18세이상 관람가',
   '청소년관람불가'
 ];
+
+final List kTheaterList = [
+  {
+    'id':'movie1',
+    'name':'IMAX1'
+  },
+  {
+    'id':'movie2',
+    'name':'IMAX2'
+  },
+  {
+    'id':'movie3',
+    'name':'IMAX3'
+  },
+  {
+    'id':'movie4',
+    'name':'IMAX4'
+  },
+  {
+    'id':'movie5',
+    'name':'IMAX5'
+  },
+];
 const noImageUrl =
     'https://image.mfa.go.th/mfa/r_0x740/bE5KohkHoq/migrate_directory/news-20190103-152039.jpg';

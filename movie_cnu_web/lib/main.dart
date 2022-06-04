@@ -2,9 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movie_cnu_web/controllers/movie_controller.dart';
-import 'package:movie_cnu_web/screens/login_screen.dart';
 import 'package:movie_cnu_web/screens/main_screen.dart';
-import 'package:movie_cnu_web/services/firebase_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

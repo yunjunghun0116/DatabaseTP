@@ -15,10 +15,18 @@ class FirebaseService {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
+  Future<List> getMovieSchedule(String movieId, String theaterName) async {
+    QuerySnapshot scheduleList = await _firebaseFirestore
+        .collection('schedule')
+        .where('movieId', isEqualTo: movieId)
+        .where('theaterName', isEqualTo: theaterName)
+        .get();
+    return scheduleList.docs;
+  }
+
   Future<List> getRunningMovie() async {
     DateTime nowTime = DateTime.now();
     DateTime subtractedTime = nowTime.subtract(const Duration(days: 10));
-    print('nowTime : $nowTime\nsubtractedTime : $subtractedTime');
     QuerySnapshot movieList = await _firebaseFirestore
         .collection('movie')
         .where('openDate', isGreaterThanOrEqualTo: subtractedTime.toString())
@@ -55,6 +63,21 @@ class FirebaseService {
       await _firebaseFirestore.collection('movie').doc(id).set(movie);
       return true;
     } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> addSchedule(
+      String movieId, String theaterName, DateTime movieRunningTime) async {
+    try {
+      await _firebaseFirestore.collection('schedule').add({
+        'movieId': movieId,
+        'movieRunningTime': movieRunningTime.toString(),
+        'theaterName': theaterName,
+      });
+      return true;
+    } catch (e) {
+      print(e);
       return false;
     }
   }

@@ -47,8 +47,8 @@ class MovieScreen extends StatelessWidget {
                   if (snapshot.hasData) {
                     List<Movie> movieList = snapshot.data as List<Movie>;
                     return GridView.count(
-                      childAspectRatio: 0.8,
-                      crossAxisCount: 5,
+                      shrinkWrap: true,
+                      crossAxisCount: 4,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
                       children: movieList.map((Movie movie) {
