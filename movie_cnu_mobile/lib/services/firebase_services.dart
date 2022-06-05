@@ -21,4 +21,24 @@ class FirebaseService {
     }
   }
 
+  Future<List> getRunningMovie() async {
+    DateTime nowTime = DateTime.now();
+    DateTime subtractedTime = nowTime.subtract(const Duration(days: 10));
+    QuerySnapshot movieList = await _firebaseFirestore
+        .collection('movie')
+        .where('openDate', isGreaterThanOrEqualTo: subtractedTime.toString())
+        .where('openDate', isLessThan: nowTime.toString())
+        .get();
+    return movieList.docs;
+  }
+
+  Future<List> getMovieSchedule(String movieId, String theaterName) async {
+    QuerySnapshot scheduleList = await _firebaseFirestore
+        .collection('schedule')
+        .where('movieId', isEqualTo: movieId)
+        .where('theaterName', isEqualTo: theaterName)
+        .get();
+    return scheduleList.docs;
+  }
+
 }
