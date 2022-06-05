@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_cnu_mobile/constants.dart';
 import 'package:movie_cnu_mobile/controllers/movie_controller.dart';
+import 'package:movie_cnu_mobile/screens/movie_detail_screen.dart';
 
 import '../models/movie.dart';
 
@@ -32,7 +33,9 @@ class MovieScreen extends StatelessWidget {
                 ...movieList.map((Movie movie) {
                   return ListTile(
                     onTap: () {
-                      print(movie.title);
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return MovieDetailScreen(movie: movie);
+                      }));
                     },
                     title: Text(
                       movie.title,

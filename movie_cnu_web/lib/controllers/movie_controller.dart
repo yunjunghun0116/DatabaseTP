@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:movie_cnu_web/models/movie.dart';
 import 'package:movie_cnu_web/services/firebase_service.dart';

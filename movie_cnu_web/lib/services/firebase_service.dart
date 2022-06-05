@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class FirebaseService {
   FirebaseService._initialize() {
@@ -70,7 +71,9 @@ class FirebaseService {
   Future<bool> addSchedule(
       String movieId, String theaterName, DateTime movieRunningTime) async {
     try {
-      await _firebaseFirestore.collection('schedule').add({
+      String id = const Uuid().v4();
+      await _firebaseFirestore.collection('schedule').doc(id).set({
+        'id':id,
         'movieId': movieId,
         'movieRunningTime': movieRunningTime.toString(),
         'theaterName': theaterName,
