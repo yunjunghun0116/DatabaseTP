@@ -1,4 +1,7 @@
 import 'package:get/get.dart';
+import 'package:movie_cnu_mobile/controllers/user_controller.dart';
+import 'package:movie_cnu_mobile/models/reserve.dart';
+import 'package:uuid/uuid.dart';
 import '../models/movie.dart';
 import '../models/schedule.dart';
 import '../services/firebase_services.dart';
@@ -8,17 +11,12 @@ class MovieController extends GetxController {
 
   final FirebaseService _firebaseService = FirebaseService();
 
-  Future<List<Schedule>> getMovieSchedule(String movieId,String theaterName)async{
-    List docs = await _firebaseService.getMovieSchedule(movieId, theaterName);
-    try{
-      return docs.map((e) {
-        return Schedule.fromJson(e.data());
-      }).toList();
-    }catch(e){
-      print(e);
-      return [];
-    }
-
+  Future<List<Schedule>> getMovieSchedule(
+      String movieId, String theaterName) async {
+    return (await _firebaseService.getMovieSchedule(movieId, theaterName))
+        .map((e) {
+      return Schedule.fromJson(e.data());
+    }).toList();
   }
 
   Future<List<Movie>> getRunningMovieList() async {
@@ -27,5 +25,11 @@ class MovieController extends GetxController {
     }).toList();
   }
 
-
+  Future<bool> reserveMovie({
+    required Movie movie,
+    required Schedule schedule,
+    required int userCount,
+  }) async {
+    return await _firebaseService.reserveMovie(movie: movie, schedule: schedule, userCount: userCount);
+  }
 }

@@ -10,15 +10,26 @@ class UserController extends GetxController {
   final FirebaseService _firebaseService = FirebaseService();
 
   Future<bool> registerUser(String id, Map<String, dynamic> userInfo) async {
-    try {
-      bool result = await _firebaseService.registerUser(id, userInfo);
-      if(result){
-        user = User.fromJson(userInfo);
-      }
-      return result;
-    } catch (e) {
-      print(e);
-      return false;
+    bool result = await _firebaseService.registerUser(id, userInfo);
+    if (result) {
+      user = User.fromJson(userInfo);
+      update();
     }
+    return result;
+  }
+
+  Future<bool> loginUser(String email, String password) async {
+    User? result = await _firebaseService.loginUser(email, password);
+    if (result != null) {
+      user = result;
+      update();
+      return true;
+    }
+    return false;
+  }
+
+  void signOut() {
+    user = null;
+    update();
   }
 }

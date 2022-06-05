@@ -121,11 +121,11 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () {
-                DatePicker.showDatePicker(
+                DatePicker.showDateTimePicker(
                   context,
                   showTitleActions: true,
                   minTime: DateTime(2022, 1, 1),
-                  maxTime: DateTime(2023, 12, 31),
+                  maxTime: DateTime(2022, 12, 31),
                   onConfirm: (DateTime date) {
                     setState(() {
                       movieRunningTime = date;
