@@ -2,76 +2,90 @@ import 'package:flutter/material.dart';
 import 'package:movie_cnu_mobile/constants.dart';
 import 'package:movie_cnu_mobile/controllers/movie_controller.dart';
 import 'package:movie_cnu_mobile/screens/movie_detail_screen.dart';
+import 'package:movie_cnu_mobile/widgets/movie_list_tile.dart';
 
 import '../models/movie.dart';
 
-class MovieScreen extends StatelessWidget {
+class MovieScreen extends StatefulWidget {
   const MovieScreen({Key? key}) : super(key: key);
 
   @override
+  State<MovieScreen> createState() => _MovieScreenState();
+}
+
+class _MovieScreenState extends State<MovieScreen> {
+  int _statusIndex = 0;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: MovieController.to.getRunningMovieList(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<Movie> movieList = snapshot.data as List<Movie>;
-            return ListView(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: const Text(
-                    '현재 상영중인 영화',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: kDarkGreyColor,
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      _statusIndex = 0;
+                    });
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    child:  Text(
+                      '현재 상영중인 영화',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: _statusIndex == 0 ? kBlueColor :kDarkGreyColor,
+                      ),
                     ),
                   ),
                 ),
-                ...movieList.map((Movie movie) {
-                  return ListTile(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context){
-                        return MovieDetailScreen(movie: movie);
-                      }));
-                    },
-                    title: Text(
-                      movie.title,
-                      style: const TextStyle(
-                        fontSize: 16,
+                
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      _statusIndex = 1;
+                    });
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    child:  Text(
+                      '상영 예정인 영화',
+                      style: TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
+                        color: _statusIndex == 1 ? kBlueColor :kDarkGreyColor,
                       ),
                     ),
-                    subtitle: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
-                            style: const TextStyle(color: kDarkGreyColor),
-                            children: [
-                              const TextSpan(text: '출연진 : '),
-                              ...movie.actors.map((e) {
-                                return TextSpan(text: '$e ');
-                              }).toList()
-                            ],
-                          ),
-                        ),
-                        Text(
-                            '개봉일자 : ${movie.openDate.toString().substring(0, 10)}'),
-                      ],
-                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: FutureBuilder(
+              future: MovieController.to.getRunningMovieList(_statusIndex),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<Movie> movieList = snapshot.data as List<Movie>;
+                  return ListView(
+                    children: movieList.map((Movie movie) {
+                    return MovieListTile(movie: movie);
+                  }).toList(),
                   );
-                }).toList()
-              ],
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

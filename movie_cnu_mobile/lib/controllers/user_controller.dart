@@ -28,7 +28,7 @@ class UserController extends GetxController {
     return false;
   }
 
-  void signOut() {
+  Future<void> signOut()async {
     user = null;
     update();
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_cnu_mobile/constants.dart';
 import 'package:movie_cnu_mobile/controllers/user_controller.dart';
 import 'package:movie_cnu_mobile/screens/history_screen.dart';
+import 'package:movie_cnu_mobile/screens/login_screen.dart';
 import 'package:movie_cnu_mobile/screens/movie_screen.dart';
 import 'package:movie_cnu_mobile/screens/theater_screen.dart';
 
@@ -19,10 +20,8 @@ class _MainScreenState extends State<MainScreen> {
       case 0:
         return const MovieScreen();
       case 1:
-        return const TheaterScreen();
       case 2:
       case 3:
-      case 4:
         return HistoryScreen(statusIndex: _currentIndex);
       default:
         return Container();
@@ -45,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
                   _currentIndex = 0;
                 });
               }),
-              _drawerTile(context, '상영관보기', () {
+              _drawerTile(context, '예매내역', () {
                 if (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 }
@@ -53,7 +52,7 @@ class _MainScreenState extends State<MainScreen> {
                   _currentIndex = 1;
                 });
               }),
-              _drawerTile(context, '예매내역', () {
+              _drawerTile(context, '취소내역', () {
                 if (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 }
@@ -61,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
                   _currentIndex = 2;
                 });
               }),
-              _drawerTile(context, '취소내역', () {
+              _drawerTile(context, '지난관람내역', () {
                 if (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 }
@@ -69,24 +68,15 @@ class _MainScreenState extends State<MainScreen> {
                   _currentIndex = 3;
                 });
               }),
-              _drawerTile(context, '지난관람내역', () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
-                setState(() {
-                  _currentIndex = 4;
-                });
+              const Spacer(),
+              _drawerTile(context, '로그아웃', () async {
+                var navigator = Navigator.of(context);
+                await UserController.to.signOut();
+                navigator.pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) {
+                  return const LoginScreen();
+                }), (route) => false);
               }),
-              Spacer(),
-              GestureDetector(
-                onTap: (){
-
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Text('로그아웃'),
-                ),
-              ),
             ],
           ),
         ),

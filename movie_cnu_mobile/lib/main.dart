@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         Get.put(MovieController());
         Get.put(UserController());
       }),
-      home: MainScreen(),
+      home: const LoginScreen(),
     );
   }
 }

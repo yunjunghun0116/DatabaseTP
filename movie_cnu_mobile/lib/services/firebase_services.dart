@@ -52,6 +52,15 @@ class FirebaseService {
     return movieList.docs;
   }
 
+  Future<List> getExpectedMovie() async {
+    DateTime nowTime = DateTime.now();
+    QuerySnapshot movieList = await _firebaseFirestore
+        .collection('movie')
+        .where('openDate', isGreaterThanOrEqualTo: nowTime.toString())
+        .get();
+    return movieList.docs;
+  }
+
   Future<List> getMovieSchedule(String movieId, String theaterName) async {
     QuerySnapshot scheduleList = await _firebaseFirestore
         .collection('schedule')
@@ -89,5 +98,13 @@ class FirebaseService {
       print(e);
       return false;
     }
+  }
+
+  Future<int> reservedScheduleCount(String scheduleId)async{
+    QuerySnapshot reservedDocs = await _firebaseFirestore
+        .collection('reserve')
+        .where('scheduleId', isEqualTo: scheduleId)
+        .get();
+    return reservedDocs.docs.length;
   }
 }
