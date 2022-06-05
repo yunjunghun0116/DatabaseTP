@@ -20,7 +20,7 @@ class MovieController extends GetxController {
   }
 
   Future<List<Movie>> getRunningMovieList(int statusIndex) async {
-    if(statusIndex == 0){
+    if (statusIndex == 0) {
       return (await _firebaseService.getRunningMovie()).map((e) {
         return Movie.fromJson(e.data());
       }).toList();
@@ -28,7 +28,6 @@ class MovieController extends GetxController {
     return (await _firebaseService.getExpectedMovie()).map((e) {
       return Movie.fromJson(e.data());
     }).toList();
-
   }
 
   Future<bool> reserveMovie({
@@ -36,10 +35,25 @@ class MovieController extends GetxController {
     required Schedule schedule,
     required int userCount,
   }) async {
-    return await _firebaseService.reserveMovie(movie: movie, schedule: schedule, userCount: userCount);
+    return await _firebaseService.reserveMovie(
+        movie: movie, schedule: schedule, userCount: userCount);
   }
 
-  Future<int> reservedScheduleCount(String scheduleId)async{
+  Future<int> reservedScheduleCount(String scheduleId) async {
     return await _firebaseService.reservedScheduleCount(scheduleId);
+  }
+
+  Future<int> reservedMovieCount(String movieId) async {
+    return await _firebaseService.reservedMovieCount(movieId);
+  }
+
+  Future<int> reservedAlreadySeenAboutMovieCount(
+    String movieId,
+    DateTime movieRunningTime,
+  ) async {
+    return await _firebaseService.reservedAlreadySeenAboutMovieCount(
+      movieId,
+      movieRunningTime,
+    );
   }
 }

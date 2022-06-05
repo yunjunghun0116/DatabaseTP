@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_cnu_mobile/constants.dart';
 import 'package:movie_cnu_mobile/controllers/movie_controller.dart';
-import 'package:movie_cnu_mobile/screens/movie_detail_screen.dart';
 import 'package:movie_cnu_mobile/widgets/movie_list_tile.dart';
-
 import '../models/movie.dart';
 
 class MovieScreen extends StatefulWidget {

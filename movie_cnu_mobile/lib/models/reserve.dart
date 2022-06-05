@@ -8,6 +8,7 @@ class Reserve {
   final int userCount;
   final bool isCanceled;
   final DateTime reservedTime;
+  final DateTime movieRunningTime;
 
   Reserve({
     required this.id,
@@ -19,6 +20,7 @@ class Reserve {
     required this.userCount,
     required this.isCanceled,
     required this.reservedTime,
+    required this.movieRunningTime,
   });
 
   factory Reserve.fromJson(json) => Reserve(
@@ -31,5 +33,6 @@ class Reserve {
         userCount: json['userCount'],
         isCanceled: json['isCanceled'],
         reservedTime: DateTime.parse(json['reservedTime']),
+        movieRunningTime: DateTime.parse(json['movieRunningTime']),
       );
 }

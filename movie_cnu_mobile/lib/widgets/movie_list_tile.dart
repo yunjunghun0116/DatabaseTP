@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:movie_cnu_mobile/controllers/movie_controller.dart';
+import 'package:movie_cnu_mobile/screens/select_theater_screen.dart';
 import '../constants.dart';
 import '../models/movie.dart';
-import '../screens/movie_detail_screen.dart';
 
 class MovieListTile extends StatelessWidget {
   final Movie movie;
@@ -12,8 +12,8 @@ class MovieListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return MovieDetailScreen(movie: movie);
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return SelectTheaterScreen(movie: movie);
         }));
       },
       title: Text(
@@ -40,8 +40,33 @@ class MovieListTile extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-              '개봉일자 : ${movie.openDate.toString().substring(0, 10)}'),
+          Text('개봉일자 : ${movie.openDate.toString().substring(0, 10)}'),
+          Row(
+            children: [
+              FutureBuilder(
+                future: MovieController.to.reservedMovieCount(movie.id),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    int count = snapshot.data as int;
+                    return Text('예매자수 : $count명');
+                  }
+                  return const Text('예매자수 : 0명 ');
+                },
+              ),
+              FutureBuilder(
+                future: MovieController.to.reservedMovieCount(movie.id),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    int count = snapshot.data as int;
+                    if (count > 0) {
+                      return Text(', 누적 관객수 : $count명');
+                    }
+                  }
+                  return const Text('');
+                },
+              ),
+            ],
+          ),
         ],
       ),
     );
