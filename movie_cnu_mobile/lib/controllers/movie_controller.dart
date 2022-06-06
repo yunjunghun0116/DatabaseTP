@@ -30,6 +30,10 @@ class MovieController extends GetxController {
     }).toList();
   }
 
+  Future<Movie> getMovieInfo(String movieId) async {
+    return await _firebaseService.getMovieInfo(movieId);
+  }
+
   Future<bool> reserveMovie({
     required Movie movie,
     required Schedule schedule,
@@ -49,11 +53,34 @@ class MovieController extends GetxController {
 
   Future<int> reservedAlreadySeenAboutMovieCount(
     String movieId,
-    DateTime movieRunningTime,
+    DateTime movieOpenDate,
   ) async {
+    print('movieId : $movieId & movieOpenDate : $movieOpenDate');
     return await _firebaseService.reservedAlreadySeenAboutMovieCount(
       movieId,
-      movieRunningTime,
+      movieOpenDate,
     );
+  }
+
+  Future<List<Reserve>> getUserReservedHistory(String userId) async {
+    return (await _firebaseService.getUserReservedHistory(userId)).map((e) {
+      return Reserve.fromJson(e.data());
+    }).toList();
+  }
+
+  Future<List<Reserve>> getUserCanceledHistory(String userId) async {
+    return (await _firebaseService.getUserCanceledHistory(userId)).map((e) {
+      return Reserve.fromJson(e.data());
+    }).toList();
+  }
+
+  Future<List<Reserve>> getUserAlreadySeenHistory(String userId) async {
+    return (await _firebaseService.getUserAlreadySeenHistory(userId)).map((e) {
+      return Reserve.fromJson(e.data());
+    }).toList();
+  }
+
+  Future<void> cancelReservedHistory(String reserveId) async {
+    await _firebaseService.cancelReservedHistory(reserveId);
   }
 }

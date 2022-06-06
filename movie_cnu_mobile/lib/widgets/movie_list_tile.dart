@@ -54,7 +54,10 @@ class MovieListTile extends StatelessWidget {
                 },
               ),
               FutureBuilder(
-                future: MovieController.to.reservedMovieCount(movie.id),
+                future: MovieController.to.reservedAlreadySeenAboutMovieCount(
+                  movie.id,
+                  movie.openDate,
+                ),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     int count = snapshot.data as int;

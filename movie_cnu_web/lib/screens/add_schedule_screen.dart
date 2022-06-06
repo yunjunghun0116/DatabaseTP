@@ -17,7 +17,14 @@ class AddScheduleScreen extends StatefulWidget {
 
 class _AddScheduleScreenState extends State<AddScheduleScreen> {
   int theaterIndex = 0;
-  DateTime movieRunningTime = DateTime.now();
+  late DateTime movieRunningTime;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    movieRunningTime = widget.movie.openDate;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +94,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                                 ),
                                 itemExtent: 30,
                                 onSelectedItemChanged: (value) {
-                                  SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                                  SchedulerBinding.instance
+                                      .addPostFrameCallback((timeStamp) {
                                     setState(() {
                                       theaterIndex = value;
                                     });
@@ -124,14 +132,16 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                 DatePicker.showDateTimePicker(
                   context,
                   showTitleActions: true,
-                  minTime: DateTime(2022, 1, 1),
+                  minTime: widget.movie.openDate,
                   maxTime: DateTime(2022, 12, 31),
                   onConfirm: (DateTime date) {
-                    setState(() {
-                      movieRunningTime = date;
+                    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                      setState(() {
+                        movieRunningTime = date;
+                      });
                     });
                   },
-                  currentTime: DateTime.now(),
+                  currentTime: widget.movie.openDate,
                   locale: LocaleType.ko,
                 );
               },

@@ -31,7 +31,6 @@ class FirebaseService {
     QuerySnapshot movieList = await _firebaseFirestore
         .collection('movie')
         .where('openDate', isGreaterThanOrEqualTo: subtractedTime.toString())
-        .where('openDate', isLessThan: nowTime.toString())
         .get();
     return movieList.docs;
   }

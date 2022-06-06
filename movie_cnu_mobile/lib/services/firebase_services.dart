@@ -70,6 +70,17 @@ class FirebaseService {
     return scheduleList.docs;
   }
 
+  Future<Movie> getMovieInfo(String movieId) async {
+    try {
+      DocumentSnapshot movieDocument =
+          await _firebaseFirestore.collection('movie').doc(movieId).get();
+      return Movie.fromJson(movieDocument.data());
+    } catch (e) {
+      print(e);
+      return Movie.fromJson(e);
+    }
+  }
+
   Future<bool> reserveMovie({
     required Movie movie,
     required Schedule schedule,
@@ -115,33 +126,100 @@ class FirebaseService {
 
   //예매자수 : 모든 예매내역
   Future<int> reservedMovieCount(String movieId) async {
-    int count = 0;
-    QuerySnapshot reservedDocs = await _firebaseFirestore
-        .collection('reserve')
-        .where('movieId', isEqualTo: movieId)
-        .get();
-    for (var e in reservedDocs.docs) {
-      count += (e.data() as Map<String, dynamic>)['userCount'] as int;
+    try{
+      int count = 0;
+      QuerySnapshot reservedDocs = await _firebaseFirestore
+          .collection('reserve')
+          .where('movieId', isEqualTo: movieId)
+          .get();
+      for (var e in reservedDocs.docs) {
+        count += (e.data() as Map<String, dynamic>)['userCount'] as int;
+      }
+      return count;
+    }catch(e){
+      print(e);
+      return 0;
     }
-    return count;
+
   }
 
   //누적 관객수 : 영화개봉일 이후부터 오늘사이에 있는 모든 예매내역의 Count
   Future<int> reservedAlreadySeenAboutMovieCount(
     String movieId,
-    DateTime movieRunningTime,
+    DateTime movieOpenDate,
   ) async {
-    int count = 0;
-    DateTime nowDateTime = DateTime.now();
-    QuerySnapshot reservedDocs = await _firebaseFirestore
-        .collection('reserve')
-        .where('movieId', isEqualTo: movieId)
-        .where('movieRunningTime', isGreaterThanOrEqualTo: movieRunningTime)
-        .where('movieRunningTime', isLessThanOrEqualTo: nowDateTime.toString())
-        .get();
-    for (var e in reservedDocs.docs) {
-      count += (e.data() as Map<String, dynamic>)['userCount'] as int;
+    try {
+      int count = 0;
+      DateTime nowDateTime = DateTime.now();
+      QuerySnapshot reservedDocs = await _firebaseFirestore
+          .collection('reserve')
+          .where('movieId', isEqualTo: movieId)
+          .where('movieRunningTime',
+              isLessThanOrEqualTo: nowDateTime.toString())
+          .orderBy('movieRunningTime', descending: true)
+          .get();
+      for (var e in reservedDocs.docs) {
+        count += (e.data() as Map<String, dynamic>)['userCount'] as int;
+      }
+      return count;
+    } catch (e) {
+      print(e);
+      return 0;
     }
-    return count;
+  }
+
+  Future<List> getUserReservedHistory(String userId) async {
+    try {
+      QuerySnapshot reservedDocs = await _firebaseFirestore
+          .collection('reserve')
+          .where('userId', isEqualTo: userId)
+          .where('isCanceled', isEqualTo: false)
+          .orderBy('reservedTime', descending: true)
+          .get();
+      return reservedDocs.docs;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List> getUserCanceledHistory(String userId) async {
+    try {
+      QuerySnapshot reservedDocs = await _firebaseFirestore
+          .collection('reserve')
+          .where('userId', isEqualTo: userId)
+          .where('isCanceled', isEqualTo: true)
+          .orderBy('reservedTime', descending: true)
+          .get();
+      return reservedDocs.docs;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List> getUserAlreadySeenHistory(String userId) async {
+    try {
+      DateTime nowDateTime = DateTime.now();
+      QuerySnapshot reservedDocs = await _firebaseFirestore
+          .collection('reserve')
+          .where('userId', isEqualTo: userId)
+          .where('isCanceled', isEqualTo: false)
+          .where('movieRunningTime',
+              isLessThanOrEqualTo: nowDateTime.toString())
+          .orderBy('movieRunningTime', descending: true)
+          .get();
+      return reservedDocs.docs;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<void> cancelReservedHistory(String reserveId) async {
+    await _firebaseFirestore
+        .collection('reserve')
+        .doc(reserveId)
+        .update({'isCanceled': true});
   }
 }

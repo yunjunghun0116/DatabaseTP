@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:movie_cnu_web/widgets/select_grade_bottom_sheet.dart';
@@ -171,8 +172,10 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
                   minTime: DateTime(2022, 1, 1),
                   maxTime: DateTime(2023, 12, 31),
                   onConfirm: (DateTime date) {
-                    setState(() {
-                      openDate = date;
+                    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                      setState(() {
+                        openDate = date;
+                      });
                     });
                   },
                   currentTime: DateTime.now(),
