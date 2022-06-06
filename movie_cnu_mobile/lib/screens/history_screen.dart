@@ -68,6 +68,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
               if (snapshot.hasData) {
                 List<Reserve> result = snapshot.data as List<Reserve>;
                 DateTime nowDateTime = DateTime.now();
+                if (widget.statusIndex == 1) {
+                  //runningTime이 미래에 위치한 것들을 모두 제거함
+                  result.removeWhere((reserve) =>
+                      nowDateTime
+                          .difference(reserve.movieRunningTime)
+                          .inMinutes >
+                      0);
+                }
                 return Column(
                   children: result.map((Reserve reserve) {
                     return Container(
@@ -91,28 +99,40 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            widget.statusIndex == 3
+                                ? Text(
+                                    '관람일자 : ${reserve.movieRunningTime.toString().substring(0, 16)}')
+                                : Container(),
                             Text(
-                                '상영일자 : ${reserve.movieRunningTime.toString().substring(0, 16)}'),
-                            Text(
-                                '${reserve.isCanceled?'취소일자':'예매일자'} : ${reserve.reservedTime.toString().substring(0, 16)}'),
+                                '${reserve.isCanceled ? '취소일자' : '예매일자'} : ${reserve.reservedTime.toString().substring(0, 16)}'),
+                            widget.statusIndex == 3
+                                ? Container()
+                                : Text(
+                                    '상영일자 : ${reserve.movieRunningTime.toString().substring(0, 16)}'),
                             Text(
                                 '예매표수 : ${reserve.userCount}, 상영장소 : ${reserve.theaterName}'),
                           ],
                         ),
-                        trailing: reserve.isCanceled||nowDateTime.difference(reserve.movieRunningTime).inMinutes>0?null:TextButton(
-                          onPressed: () async {
-                            await MovieController.to
-                                .cancelReservedHistory(reserve.id);
-                            setState(() {});
-                          },
-                          child: const Text(
-                            '취소하기',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: kRedColor,
-                            ),
-                          ),
-                        ),
+                        trailing: reserve.isCanceled ||
+                                nowDateTime
+                                        .difference(reserve.movieRunningTime)
+                                        .inMinutes >
+                                    0
+                            ? null
+                            : TextButton(
+                                onPressed: () async {
+                                  await MovieController.to
+                                      .cancelReservedHistory(reserve.id);
+                                  setState(() {});
+                                },
+                                child: const Text(
+                                  '취소하기',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: kRedColor,
+                                  ),
+                                ),
+                              ),
                       ),
                     );
                   }).toList(),
