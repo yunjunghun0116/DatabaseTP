@@ -62,12 +62,20 @@ class FirebaseService {
   }
 
   Future<List> getMovieSchedule(String movieId, String theaterName) async {
-    QuerySnapshot scheduleList = await _firebaseFirestore
-        .collection('schedule')
-        .where('movieId', isEqualTo: movieId)
-        .where('theaterName', isEqualTo: theaterName)
-        .get();
-    return scheduleList.docs;
+    try {
+      DateTime nowDateTime = DateTime.now();
+      QuerySnapshot scheduleList = await _firebaseFirestore
+          .collection('schedule')
+          .where('movieId', isEqualTo: movieId)
+          .where('theaterName', isEqualTo: theaterName)
+          .where('movieRunningTime',
+              isGreaterThanOrEqualTo: nowDateTime.toString())
+          .get();
+      return scheduleList.docs;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   Future<Movie> getMovieInfo(String movieId) async {
@@ -134,10 +142,13 @@ class FirebaseService {
   Future<int> reservedMovieCount(String movieId) async {
     try {
       int count = 0;
+      DateTime nowDateTime = DateTime.now();
       QuerySnapshot reservedDocs = await _firebaseFirestore
           .collection('reserve')
           .where('movieId', isEqualTo: movieId)
           .where('isCanceled', isEqualTo: false)
+          .where('movieRunningTime',
+              isGreaterThanOrEqualTo: nowDateTime.toString())
           .get();
       for (var e in reservedDocs.docs) {
         count += (e.data() as Map<String, dynamic>)['userCount'] as int;

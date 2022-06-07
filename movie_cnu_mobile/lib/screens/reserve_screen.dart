@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movie_cnu_mobile/constants.dart';
 import 'package:movie_cnu_mobile/controllers/movie_controller.dart';
+import 'package:movie_cnu_mobile/controllers/user_controller.dart';
 import 'package:movie_cnu_mobile/screens/main_screen.dart';
+import 'package:movie_cnu_mobile/services/email_services.dart';
 import '../models/movie.dart';
 import '../models/schedule.dart';
 
@@ -86,6 +88,14 @@ class _ReserveScreenState extends State<ReserveScreen> {
                   userCount: _userCount,
                 );
                 if (reserveSuccess) {
+                  await EmailService().sendEmail(
+                    email: UserController.to.user!.email,
+                    movieTitle: widget.movie.title,
+                    reservedTime: DateTime.now(),
+                    reservedCount: _userCount,
+                    movieRunningTime: widget.schedule.movieRunningTime,
+                    theaterName: widget.schedule.theaterName,
+                  );
                   navigator.pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) {
                     return const MainScreen();

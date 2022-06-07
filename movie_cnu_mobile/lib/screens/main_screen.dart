@@ -86,6 +86,12 @@ class _MainScreenState extends State<MainScreen> {
         foregroundColor: kBlackColor,
         elevation: 1,
         title: const Text('CNU Movie'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.search_outlined),
+          ),
+        ],
       ),
       body: _getScreen(),
     );
