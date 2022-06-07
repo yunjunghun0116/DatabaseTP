@@ -68,12 +68,13 @@ class FirebaseService {
   }
 
   Future<bool> addSchedule(
-      String movieId, String theaterName, DateTime movieRunningTime) async {
+      String movieId, String movieName,String theaterName, DateTime movieRunningTime) async {
     try {
       String id = const Uuid().v4();
       await _firebaseFirestore.collection('schedule').doc(id).set({
         'id':id,
         'movieId': movieId,
+        'movieName':movieName,
         'movieRunningTime': movieRunningTime.toString(),
         'theaterName': theaterName,
       });

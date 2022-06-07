@@ -21,7 +21,6 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     movieRunningTime = widget.movie.openDate;
   }
@@ -37,8 +36,11 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
         actions: [
           TextButton(
             onPressed: () async {
-              await MovieController.to.addSchedule(widget.movie.id,
-                  kTheaterList[theaterIndex]['name'], movieRunningTime);
+              await MovieController.to.addSchedule(
+                  widget.movie.id,
+                  widget.movie.title,
+                  kTheaterList[theaterIndex]['name'],
+                  movieRunningTime);
               Get.back(result: true);
             },
             child: const Text('등록하기'),

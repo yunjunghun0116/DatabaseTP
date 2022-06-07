@@ -238,4 +238,14 @@ class FirebaseService {
       'reservedTime': DateTime.now().toString(),
     });
   }
+  
+  Future<void> searchWithTitle(String title)async{
+    QuerySnapshot reservedDocs = await _firebaseFirestore.collection('schedule').where('field')
+  }
+  Future<void> searchWithDate(DateTime date)async{
+
+  }
+  Future<void> searchWithTitleAndDate(String title,DateTime date)async{
+
+  }
 }

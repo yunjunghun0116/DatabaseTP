@@ -4,7 +4,7 @@ import 'package:movie_cnu_mobile/controllers/user_controller.dart';
 import 'package:movie_cnu_mobile/screens/history_screen.dart';
 import 'package:movie_cnu_mobile/screens/login_screen.dart';
 import 'package:movie_cnu_mobile/screens/movie_screen.dart';
-import 'package:movie_cnu_mobile/screens/theater_screen.dart';
+import 'package:movie_cnu_mobile/screens/search_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -88,8 +88,11 @@ class _MainScreenState extends State<MainScreen> {
         title: const Text('CNU Movie'),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search_outlined),
+            onPressed: () =>
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return const SearchScreen();
+            })),
+            icon: const Icon(Icons.search_outlined),
           ),
         ],
       ),
