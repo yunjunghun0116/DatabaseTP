@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:get/get.dart';
 import 'package:movie_cnu_mobile/constants.dart';
+import 'package:movie_cnu_mobile/controllers/movie_controller.dart';
+import 'package:movie_cnu_mobile/screens/search_result_screen.dart';
 
+import '../models/movie.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -18,16 +22,50 @@ class _SearchScreenState extends State<SearchScreen> {
 
   final formKey = GlobalKey<FormState>();
 
-  void searchPressed() async {
+  void searchPressed(BuildContext context) async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
+      if (searchTitle.isEmpty && searchDate == null) {
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  child: const Text(
+                    '검색하고자 하는 영화제목이나\n영화관람 예정일을 입력해주세요!!!',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            });
+        return;
+      }
       if (searchTitle.isNotEmpty && searchDate == null) {
+        var navigator = Navigator.of(context);
+        List<Movie> result =
+            await MovieController.to.searchWithTitle(searchTitle);
+        navigator.push(MaterialPageRoute(builder: (context) {
+          return SearchResultScreen(searchResult: result);
+        }));
         return;
       }
       if (searchTitle.isEmpty && searchDate != null) {
+        var navigator = Navigator.of(context);
+        List<Movie> result =
+            await MovieController.to.searchWithDate(searchDate!);
+        navigator.push(MaterialPageRoute(builder: (context) {
+          return SearchResultScreen(searchResult: result);
+        }));
         return;
       }
       if (searchTitle.isNotEmpty && searchDate != null) {
+        var navigator = Navigator.of(context);
+        List<Movie> result = await MovieController.to
+            .searchWithTitleAndDate(searchTitle, searchDate!);
+        navigator.push(MaterialPageRoute(builder: (context) {
+          return SearchResultScreen(searchResult: result);
+        }));
         return;
       }
     }
@@ -43,7 +81,7 @@ class _SearchScreenState extends State<SearchScreen> {
         title: const Text('검색'),
         actions: [
           TextButton(
-            onPressed: () => searchPressed(),
+            onPressed: () => searchPressed(context),
             child: const Text('검색하기'),
           ),
         ],

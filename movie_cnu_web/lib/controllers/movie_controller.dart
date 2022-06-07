@@ -56,11 +56,15 @@ class MovieController extends GetxController {
     }
   }
 
-  Future<bool> addSchedule(String movieId, String movieName, String theaterName,
-      DateTime movieRunningTime) async {
+  Future<bool> addSchedule(
+    String movieId,
+    String movieTitle,
+    String theaterName,
+    DateTime movieRunningTime,
+  ) async {
     try {
       return await FirebaseService()
-          .addSchedule(movieId, movieName, theaterName, movieRunningTime);
+          .addSchedule(movieId, movieTitle, theaterName, movieRunningTime);
     } catch (e) {
       print(e);
       return false;

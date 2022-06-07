@@ -88,4 +88,15 @@ class MovieController extends GetxController {
   Future<void> cancelReservedHistory(String reserveId) async {
     await _firebaseService.cancelReservedHistory(reserveId);
   }
+
+  Future<List<Movie>> searchWithTitle(String title)async{
+    return await _firebaseService.searchWithTitle(title);
+  }
+
+  Future<List<Movie>> searchWithDate(DateTime date)async{
+    return await _firebaseService.searchWithDate( date);
+  }
+  Future<List<Movie>> searchWithTitleAndDate(String title, DateTime date)async{
+    return await _firebaseService.searchWithTitleAndDate(title,date);
+  }
 }

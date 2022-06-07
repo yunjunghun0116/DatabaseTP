@@ -79,14 +79,9 @@ class FirebaseService {
   }
 
   Future<Movie> getMovieInfo(String movieId) async {
-    try {
-      DocumentSnapshot movieDocument =
-          await _firebaseFirestore.collection('movie').doc(movieId).get();
-      return Movie.fromJson(movieDocument.data());
-    } catch (e) {
-      print(e);
-      return Movie.fromJson(e);
-    }
+    DocumentSnapshot movieDocument =
+        await _firebaseFirestore.collection('movie').doc(movieId).get();
+    return Movie.fromJson(movieDocument.data());
   }
 
   Future<bool> reserveMovie({
@@ -238,14 +233,87 @@ class FirebaseService {
       'reservedTime': DateTime.now().toString(),
     });
   }
-  
-  Future<void> searchWithTitle(String title)async{
-    QuerySnapshot reservedDocs = await _firebaseFirestore.collection('schedule').where('field')
-  }
-  Future<void> searchWithDate(DateTime date)async{
 
-  }
-  Future<void> searchWithTitleAndDate(String title,DateTime date)async{
+  Future<List<Movie>> searchWithTitle(String title) async {
+    try {
+      List<String> movieIdList = [];
+      QuerySnapshot scheduleDocs = await _firebaseFirestore
+          .collection('schedule')
+          .where('movieTitle', isEqualTo: title)
+          .get();
+      for (var element in scheduleDocs.docs) {
+        Map<String, dynamic> scheduleData =
+            element.data() as Map<String, dynamic>;
+        if (!movieIdList.contains(scheduleData['movieId'])) {
+          movieIdList.add(scheduleData['movieId']);
+        }
+      }
+      List<Movie> movieList = [];
 
+      for (String movieId in movieIdList) {
+        movieList.add(await getMovieInfo(movieId));
+      }
+      return movieList;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List<Movie>> searchWithDate(DateTime date) async {
+    try {
+      List<String> movieIdList = [];
+      QuerySnapshot scheduleDocs = await _firebaseFirestore
+          .collection('schedule')
+          .where('movieRunningTime', isGreaterThanOrEqualTo: date.toString())
+          .where('movieRunningTime',
+              isLessThanOrEqualTo: date.add(const Duration(days: 1)).toString())
+          .get();
+      for (var element in scheduleDocs.docs) {
+        Map<String, dynamic> scheduleData =
+            element.data() as Map<String, dynamic>;
+        if (!movieIdList.contains(scheduleData['movieId'])) {
+          movieIdList.add(scheduleData['movieId']);
+        }
+      }
+      List<Movie> movieList = [];
+
+      for (String movieId in movieIdList) {
+        movieList.add(await getMovieInfo(movieId));
+      }
+      return movieList;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List<Movie>> searchWithTitleAndDate(String title, DateTime date) async {
+    try {
+      List<String> movieIdList = [];
+      QuerySnapshot scheduleDocs = await _firebaseFirestore
+          .collection('schedule')
+          .where('movieTitle', isEqualTo: title)
+          .where('movieRunningTime', isGreaterThanOrEqualTo: date.toString())
+          .where('movieRunningTime',
+          isLessThanOrEqualTo: date.add(const Duration(days: 1)).toString())
+          .get();
+      for (var element in scheduleDocs.docs) {
+        Map<String, dynamic> scheduleData =
+        element.data() as Map<String, dynamic>;
+        if (!movieIdList.contains(scheduleData['movieId'])) {
+          movieIdList.add(scheduleData['movieId']);
+        }
+      }
+      List<Movie> movieList = [];
+
+      for (String movieId in movieIdList) {
+        movieList.add(await getMovieInfo(movieId));
+      }
+      return movieList;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 }
