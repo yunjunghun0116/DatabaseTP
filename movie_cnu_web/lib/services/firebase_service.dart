@@ -1,9 +1,10 @@
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:movie_cnu_web/models/reserve.dart';
+import 'package:movie_cnu_web/models/user.dart';
 import 'package:uuid/uuid.dart';
+
+import '../models/movie.dart';
 
 class FirebaseService {
   FirebaseService._initialize() {
@@ -14,8 +15,6 @@ class FirebaseService {
   factory FirebaseService() => _service;
 
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
-  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-
   Future<List> getMovieSchedule(String movieId, String theaterName) async {
     QuerySnapshot scheduleList = await _firebaseFirestore
         .collection('schedule')
@@ -33,29 +32,6 @@ class FirebaseService {
         .where('openDate', isGreaterThanOrEqualTo: subtractedTime.toString())
         .get();
     return movieList.docs;
-  }
-
-  Future<bool> uploadImage(String movieId, Uint8List file) async {
-    try {
-      String destination = 'movies/$movieId';
-      final ref = _firebaseStorage.ref(destination);
-      await ref.putData(file);
-      return true;
-    } catch (e) {
-      print('errorMsg : $e');
-      return false;
-    }
-  }
-
-  Future<Uint8List?> getImage(String movieId) async {
-    try {
-      String destination = 'movies/$movieId';
-      final ref = _firebaseStorage.ref(destination);
-      return await ref.getData(1000000);
-    } catch (e) {
-      print('errorMsg : $e');
-      return null;
-    }
   }
 
   Future<bool> uploadMovie(String id, Map<String, dynamic> movie) async {
@@ -84,4 +60,38 @@ class FirebaseService {
       return false;
     }
   }
+
+  Future<List<User>> getUserList()async{
+    try{
+      QuerySnapshot<Map<String,dynamic>> userList =  await _firebaseFirestore.collection('user').get();
+      return userList.docs.map((e){
+        return User.fromJson(e.data());
+      }).toList();
+    }catch(e){
+      return [];
+    }
+  }
+
+  Future<List<Reserve>> getReserveList()async{
+    try{
+      QuerySnapshot<Map<String,dynamic>> reserveList =  await _firebaseFirestore.collection('reserve').get();
+      return reserveList.docs.map((e){
+        return Reserve.fromJson(e.data());
+      }).toList();
+    }catch(e){
+      return [];
+    }
+  }
+
+  Future<Movie> getMovieInfo(String movieId)async{
+    DocumentSnapshot movieInfo =  await _firebaseFirestore.collection('movie').doc(movieId).get();
+    return Movie.fromJson(movieInfo.data());
+  }
+
+  Future<void> cancelReserve(String reserveId)async{
+    await _firebaseFirestore.collection('reserve').doc(reserveId).update({
+      'isCanceled':true
+    });
+  }
+
 }

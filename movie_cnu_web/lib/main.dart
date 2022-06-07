@@ -2,6 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movie_cnu_web/controllers/movie_controller.dart';
+import 'package:movie_cnu_web/controllers/reserve_controller.dart';
+import 'package:movie_cnu_web/controllers/user_manage_controller.dart';
+import 'package:movie_cnu_web/screens/login_screen.dart';
 import 'package:movie_cnu_web/screens/main_screen.dart';
 
 Future<void> main() async {
@@ -31,8 +34,10 @@ class MyApp extends StatelessWidget {
       ),
       initialBinding: BindingsBuilder(() {
         Get.put(MovieController());
+        Get.put(UserManageController());
+        Get.put(ReserveController());
       }),
-      home: const MainScreen(),
+      home: const LoginScreen(),
     );
   }
 }

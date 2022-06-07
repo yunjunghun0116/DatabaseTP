@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -49,25 +48,6 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
     }
   }
 
-  void uploadImage(String movieId) async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
-      if (result != null) {
-        Uint8List? fileBytesImage = result.files.first.bytes;
-        if (fileBytesImage == null) return;
-        bool uploadSuccess =
-            await MovieController.to.uploadImage(movieId, fileBytesImage);
-        if (uploadSuccess) {
-          setState(() {
-            fileBytes = fileBytesImage;
-          });
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,57 +76,6 @@ class _UploadMovieScreenState extends State<UploadMovieScreen> {
                 return null;
               },
             ),
-            //이미지 관련
-            // Padding(
-            //   padding: const EdgeInsets.all(16),
-            //   child: Row(
-            //     crossAxisAlignment: CrossAxisAlignment.end,
-            //     children: [
-            //       SizedBox(
-            //         width: 150,
-            //         height: 200,
-            //         child: fileBytes == null
-            //             ? Image.network(
-            //                 noImageUrl,
-            //                 fit: BoxFit.fill,
-            //               )
-            //             : Image.memory(
-            //                 fileBytes!,
-            //                 fit: BoxFit.cover,
-            //               ),
-            //       ),
-            //       const SizedBox(
-            //         width: 20,
-            //       ),
-            //       Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           const Text(
-            //             '이미지',
-            //             style: TextStyle(
-            //               fontSize: 16,
-            //               fontWeight: FontWeight.bold,
-            //             ),
-            //           ),
-            //           const SizedBox(height: 20),
-            //           InkWell(
-            //             onTap: () => uploadImage(movieId),
-            //             child: Container(
-            //               alignment: Alignment.center,
-            //               width: 200,
-            //               padding: const EdgeInsets.all(16),
-            //               decoration: BoxDecoration(
-            //                 border: Border.all(color: kGreyColor),
-            //                 borderRadius: BorderRadius.circular(5),
-            //               ),
-            //               child: const Text('이미지 등록하기'),
-            //             ),
-            //           ),
-            //         ],
-            //       )
-            //     ],
-            //   ),
-            // ),
             CustomTextFormField(
               label: '영화감독',
               onSaved: (value) {

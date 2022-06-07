@@ -10,6 +10,10 @@ class MovieController extends GetxController {
 
   final FirebaseService _firebaseService = FirebaseService();
 
+  Future<Movie> getMovieInfo(String movieId)async{
+    return await _firebaseService.getMovieInfo(movieId);
+  }
+
   Future<List<Schedule>> getMovieSchedule(
       String movieId, String theaterName) async {
     List docs = await _firebaseService.getMovieSchedule(movieId, theaterName);
@@ -29,23 +33,6 @@ class MovieController extends GetxController {
     }).toList();
   }
 
-  Future<bool> uploadImage(String movieId, Uint8List file) async {
-    try {
-      return await FirebaseService().uploadImage(movieId, file);
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  Future<Uint8List?> getImage(String movieId) async {
-    try {
-      return await FirebaseService().getImage(movieId);
-    } catch (e) {
-      print('error is $e');
-      return null;
-    }
-  }
 
   Future<bool> uploadMovie(String id, Map<String, dynamic> movie) async {
     try {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:get/get.dart';
 import 'package:movie_cnu_mobile/constants.dart';
 import 'package:movie_cnu_mobile/controllers/movie_controller.dart';
 import 'package:movie_cnu_mobile/screens/search_result_screen.dart';

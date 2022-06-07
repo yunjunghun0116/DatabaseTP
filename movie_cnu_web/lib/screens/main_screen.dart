@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_cnu_web/constants.dart';
-import 'package:movie_cnu_web/screens/customer_screen.dart';
+import 'package:movie_cnu_web/screens/user_manage_screen.dart';
 import 'package:movie_cnu_web/screens/movie_screen.dart';
 import 'package:movie_cnu_web/screens/reserve_screen.dart';
 
@@ -71,7 +71,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               controller: _tabController,
               children: const [
                 MovieScreen(),
-                CustomerScreen(),
+                UserManageScreen(),
                 ReserveScreen(),
               ],
             ),
